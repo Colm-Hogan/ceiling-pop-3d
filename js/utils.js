@@ -43,15 +43,28 @@ const MathUtils = {
 
 // Color utilities
 const ColorUtils = {
-    // Generate random vibrant color (now more saturated)
+    // Generate random vibrant color (now more saturated and bright)
     randomVibrant: () => {
         // Pick a random hue, full saturation, high lightness
         const h = Math.random();
-        const s = 0.95;
-        const l = 0.55 + Math.random() * 0.25; // 0.55-0.8 for brightness
+        const s = 0.9 + Math.random() * 0.1; // 0.9-1.0 for maximum saturation
+        const l = 0.6 + Math.random() * 0.3; // 0.6-0.9 for high brightness
         // Convert HSL to RGB
         const rgb = hslToRgb(h, s, l);
         return { r: rgb[0] * 255, g: rgb[1] * 255, b: rgb[2] * 255 };
+    },
+    
+    // Generate neon colors for special effects
+    randomNeon: () => {
+        const colors = [
+            { r: 255, g: 0, b: 255 },   // Magenta
+            { r: 0, g: 255, b: 255 },   // Cyan
+            { r: 255, g: 255, b: 0 },   // Yellow
+            { r: 0, g: 255, b: 0 },     // Green
+            { r: 255, g: 0, b: 0 },     // Red
+            { r: 0, g: 0, b: 255 }      // Blue
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
     },
     
     // Convert color object to hex
@@ -63,14 +76,22 @@ const ColorUtils = {
     },
     
     // Convert color object to Three.js Color
-    toThreeColor: (color) => new THREE.Color(color.r / 255, color.g / 255, color.b / 255),
+    toThreeColor: (color) => {
+        return new THREE.Color(color.r / 255, color.g / 255, color.b / 255);
+    },
     
     // Interpolate between two colors
     lerp: (color1, color2, factor) => ({
         r: MathUtils.lerp(color1.r, color2.r, factor),
         g: MathUtils.lerp(color1.g, color2.g, factor),
         b: MathUtils.lerp(color1.b, color2.b, factor)
-    })
+    }),
+    
+    // Generate color with specific hue
+    fromHue: (hue, saturation = 0.9, lightness = 0.7) => {
+        const rgb = hslToRgb(hue, saturation, lightness);
+        return { r: rgb[0] * 255, g: rgb[1] * 255, b: rgb[2] * 255 };
+    }
 };
 
 // HSL to RGB helper

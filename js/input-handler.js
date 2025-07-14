@@ -320,15 +320,12 @@ class InputHandler {
     createProjectileTrail(startPos, endPos) {
         // Create multiple projectiles along the swipe path
         const projectileCount = 5;
-        const start3D = this.sceneManager.screenToWorld(startPos.x, startPos.y, 15);
-        const end3D = this.sceneManager.screenToWorld(endPos.x, endPos.y, -50);
+        const target3D = this.sceneManager.screenToWorld(endPos.x, endPos.y, -50);
         
         for (let i = 0; i < projectileCount; i++) {
             setTimeout(() => {
                 this.sceneManager.createPlayerProjectile({
-                    position: start3D.clone(),
-                    targetPosition: end3D.clone(),
-                    speed: 25
+                    targetPosition: target3D.clone()
                 });
             }, i * 50);
         }

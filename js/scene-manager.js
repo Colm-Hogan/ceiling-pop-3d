@@ -298,10 +298,13 @@ class SceneManager {
         const projectile = this.projectilePool.acquire();
         projectile.owner = 'player';
         
-        if (options.position) projectile.setPosition(options.position.x, options.position.y, options.position.z);
+        // Set starting position (from player/camera area)
+        const startPos = new THREE.Vector3(0, 0, 15); // Player position
+        projectile.setPosition(startPos.x, startPos.y, startPos.z);
         
         if (options.targetPosition) {
-            const direction = options.targetPosition.clone().sub(projectile.position).normalize();
+            // Calculate direction FROM player TO target (not the other way around)
+            const direction = options.targetPosition.clone().sub(startPos).normalize();
             projectile.setDirection(direction);
         }
         

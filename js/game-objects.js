@@ -102,22 +102,34 @@ class Balloon3D extends GameObject3D {
         // Create balloon geometry
         const geometry = geometryCache.getSphere(this.radius, 16, 12);
         
-        // Create material based on type
+        // Create material based on type with vibrant colors
         let material;
         if (this.type === 'powerup') {
             material = new THREE.MeshPhongMaterial({
                 color: ColorUtils.toThreeColor(this.color),
-                emissive: new THREE.Color(0.2, 0.6, 0.2),
+                emissive: ColorUtils.toThreeColor(this.color),
+                emissiveIntensity: 0.8,
                 shininess: 100,
+                transparent: true,
+                opacity: 0.9
+            });
+        } else if (this.type === 'armored') {
+            material = new THREE.MeshPhongMaterial({
+                color: ColorUtils.toThreeColor(this.color),
+                emissive: ColorUtils.toThreeColor(this.color),
+                emissiveIntensity: 0.6,
+                shininess: 80,
                 transparent: true,
                 opacity: 0.9
             });
         } else {
             material = new THREE.MeshPhongMaterial({
                 color: ColorUtils.toThreeColor(this.color),
+                emissive: ColorUtils.toThreeColor(this.color),
+                emissiveIntensity: 0.5,
                 shininess: 80,
                 transparent: true,
-                opacity: 0.85
+                opacity: 0.9
             });
         }
         
@@ -129,10 +141,10 @@ class Balloon3D extends GameObject3D {
             const glowMaterial = new THREE.MeshPhongMaterial({
                 color: 0x00ff00,
                 emissive: 0x00ff00,
-                emissiveIntensity: 0.7,
+                emissiveIntensity: 0.9,
                 shininess: 100,
                 transparent: true,
-                opacity: 0.3,
+                opacity: 0.4,
                 side: THREE.BackSide
             });
             const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
@@ -590,12 +602,21 @@ class Projectile3D extends GameObject3D {
     
     createMesh(geometryCache) {
         const geometry = geometryCache.getSphere(this.size, 6, 4);
-        const color = this.owner === 'player' ? 0x00ffff : 0xff3300;
+        
+        // Use vibrant colors for projectiles
+        let color;
+        if (this.owner === 'player') {
+            // Use neon cyan for player projectiles
+            color = 0x00ffff;
+        } else {
+            // Use neon red for enemy projectiles
+            color = 0xff0066;
+        }
         
         const material = new THREE.MeshPhongMaterial({
             color: color,
             emissive: color,
-            emissiveIntensity: 0.7,
+            emissiveIntensity: 0.9,
             shininess: 100,
             transparent: true,
             opacity: 1
@@ -613,10 +634,10 @@ class Projectile3D extends GameObject3D {
         const trailMaterial = new THREE.MeshPhongMaterial({
             color: 0xffffff,
             emissive: 0xffffff,
-            emissiveIntensity: 0.5,
+            emissiveIntensity: 0.8,
             shininess: 80,
             transparent: true,
-            opacity: 0.7
+            opacity: 0.8
         });
         
         this.trailMesh = new THREE.Mesh(trailGeometry, trailMaterial);
@@ -821,14 +842,16 @@ class Particle3D extends GameObject3D {
     }
     
     createMesh(geometryCache) {
-        const geometry = geometryCache.getSphere(this.size, 4, 3);
+        const geometry = geometryCache.getSphere(this.size, 6, 4);
+        
+        // Use vibrant colors for particles
         const material = new THREE.MeshPhongMaterial({
             color: ColorUtils.toThreeColor(this.color),
             emissive: ColorUtils.toThreeColor(this.color),
-            emissiveIntensity: 0.6,
-            shininess: 80,
+            emissiveIntensity: 0.8,
+            shininess: 100,
             transparent: true,
-            opacity: 1
+            opacity: 0.9
         });
         
         this.mesh = new THREE.Mesh(geometry, material);
