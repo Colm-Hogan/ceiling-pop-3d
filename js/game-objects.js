@@ -126,8 +126,11 @@ class Balloon3D extends GameObject3D {
         // Add glow effect for power-ups
         if (this.type === 'powerup') {
             const glowGeometry = geometryCache.getSphere(this.radius * 1.3, 8, 6);
-            const glowMaterial = new THREE.MeshBasicMaterial({
+            const glowMaterial = new THREE.MeshPhongMaterial({
                 color: 0x00ff00,
+                emissive: 0x00ff00,
+                emissiveIntensity: 0.7,
+                shininess: 100,
                 transparent: true,
                 opacity: 0.3,
                 side: THREE.BackSide
@@ -383,8 +386,11 @@ class EnemyDrone3D extends GameObject3D {
         
         // Add engine glow
         const engineGeometry = geometryCache.getCylinder(0.3, 0.3, 0.5, 8);
-        const engineMaterial = new THREE.MeshBasicMaterial({
-            color: 0xff0000
+        const engineMaterial = new THREE.MeshPhongMaterial({
+            color: 0xff2222,
+            emissive: 0xff2222,
+            emissiveIntensity: 0.8,
+            shininess: 100
         });
         
         const engine1 = new THREE.Mesh(engineGeometry, engineMaterial);
@@ -447,7 +453,7 @@ class EnemyDrone3D extends GameObject3D {
         if (this.mesh) {
             const engines = this.mesh.children.filter(child => 
                 child.material && child.material.color && 
-                child.material.color.getHex() === 0xff0000
+                child.material.color.getHex() === 0xff2222
             );
             engines.forEach(engine => {
                 const intensity = 0.3 + Math.sin(this.age * 8) * 0.2;
@@ -586,10 +592,13 @@ class Projectile3D extends GameObject3D {
         const geometry = geometryCache.getSphere(this.size, 6, 4);
         const color = this.owner === 'player' ? 0x00ffff : 0xff3300;
         
-        const material = new THREE.MeshBasicMaterial({
+        const material = new THREE.MeshPhongMaterial({
             color: color,
             emissive: color,
-            emissiveIntensity: 0.7
+            emissiveIntensity: 0.7,
+            shininess: 100,
+            transparent: true,
+            opacity: 1
         });
         
         this.mesh = new THREE.Mesh(geometry, material);
@@ -601,10 +610,13 @@ class Projectile3D extends GameObject3D {
     
     createTrail() {
         const trailGeometry = new THREE.SphereGeometry(this.size * 0.5, 4, 3);
-        const trailMaterial = new THREE.MeshBasicMaterial({
-            color: this.owner === 'player' ? 0x00ffff : 0xff3300,
+        const trailMaterial = new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            emissive: 0xffffff,
+            emissiveIntensity: 0.5,
+            shininess: 80,
             transparent: true,
-            opacity: 0.3
+            opacity: 0.7
         });
         
         this.trailMesh = new THREE.Mesh(trailGeometry, trailMaterial);
@@ -678,8 +690,11 @@ class MiniShip3D extends GameObject3D {
         
         // Engine glow
         const engineGeometry = geometryCache.getCylinder(0.1, 0.1, 0.3, 6);
-        const engineMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ffff
+        const engineMaterial = new THREE.MeshPhongMaterial({
+            color: 0x00ffff,
+            emissive: 0x00ffff,
+            emissiveIntensity: 0.8,
+            shininess: 100
         });
         const engine = new THREE.Mesh(engineGeometry, engineMaterial);
         engine.position.z = -this.size * 0.8;
@@ -807,8 +822,11 @@ class Particle3D extends GameObject3D {
     
     createMesh(geometryCache) {
         const geometry = geometryCache.getSphere(this.size, 4, 3);
-        const material = new THREE.MeshBasicMaterial({
+        const material = new THREE.MeshPhongMaterial({
             color: ColorUtils.toThreeColor(this.color),
+            emissive: ColorUtils.toThreeColor(this.color),
+            emissiveIntensity: 0.6,
+            shininess: 80,
             transparent: true,
             opacity: 1
         });
@@ -850,8 +868,11 @@ class Star3D extends GameObject3D {
     
     createMesh(geometryCache) {
         const geometry = geometryCache.getSphere(this.size, 4, 3);
-        const material = new THREE.MeshBasicMaterial({
+        const material = new THREE.MeshPhongMaterial({
             color: 0xffffff,
+            emissive: 0xffffff,
+            emissiveIntensity: 0.5,
+            shininess: 100,
             transparent: true,
             opacity: this.brightness
         });
