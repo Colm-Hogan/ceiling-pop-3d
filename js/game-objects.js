@@ -104,32 +104,33 @@ class Balloon3D extends GameObject3D {
         
         // Create material based on type with vibrant colors
         let material;
+        const neonColor = ColorUtils.toThreeColor(this.color, 1.2); // boost saturation
         if (this.type === 'powerup') {
             material = new THREE.MeshPhongMaterial({
-                color: ColorUtils.toThreeColor(this.color),
-                emissive: ColorUtils.toThreeColor(this.color),
-                emissiveIntensity: 0.8,
-                shininess: 100,
-                transparent: true,
-                opacity: 0.9
+                color: neonColor,
+                emissive: neonColor,
+                emissiveIntensity: 1.2,
+                shininess: 120,
+                transparent: false,
+                opacity: 1
             });
         } else if (this.type === 'armored') {
             material = new THREE.MeshPhongMaterial({
-                color: ColorUtils.toThreeColor(this.color),
-                emissive: ColorUtils.toThreeColor(this.color),
-                emissiveIntensity: 0.6,
-                shininess: 80,
-                transparent: true,
-                opacity: 0.9
+                color: neonColor,
+                emissive: neonColor,
+                emissiveIntensity: 1.0,
+                shininess: 100,
+                transparent: false,
+                opacity: 1
             });
         } else {
             material = new THREE.MeshPhongMaterial({
-                color: ColorUtils.toThreeColor(this.color),
-                emissive: ColorUtils.toThreeColor(this.color),
-                emissiveIntensity: 0.5,
-                shininess: 80,
-                transparent: true,
-                opacity: 0.9
+                color: neonColor,
+                emissive: neonColor,
+                emissiveIntensity: 0.9,
+                shininess: 100,
+                transparent: false,
+                opacity: 1
             });
         }
         
@@ -219,10 +220,9 @@ class Balloon3D extends GameObject3D {
             this.destroy();
         }
         
-        // Update material opacity based on depth for depth perception
+        // Clamp opacity for vibrancy
         if (this.mesh && this.mesh.material) {
-            const depthFactor = MathUtils.clamp((this.position.z + 100) / 120, 0.3, 1);
-            this.mesh.material.opacity = depthFactor * 0.85;
+            this.mesh.material.opacity = Math.max(0.8, this.mesh.material.opacity);
         }
     }
     

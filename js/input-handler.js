@@ -236,25 +236,18 @@ class InputHandler {
     }
     
     handleTap(position) {
-        // Direct 3D object interaction
+        // Fire a projectile toward the tap/click (sceneManager.handleTap now does this)
         const hit = this.sceneManager.handleTap(position.x, position.y);
-        
-        if (hit) {
-            // Successful hit feedback
-            this.createTapRipple(position);
-            
-            // Update perspective accuracy stat
-            if (window.player) {
+        this.createTapRipple(position);
+        // Feedback for stats (optional, can be kept)
+        if (window.player) {
+            if (hit) {
                 window.player.updatePerspectiveAccuracy(1.0);
-            }
-        } else {
-            // Miss feedback
-            if (window.player) {
+            } else {
                 window.player.updatePerspectiveAccuracy(0.8);
                 window.player.breakCombo();
             }
         }
-        
         console.log('Input: Tap handled', hit ? '(HIT)' : '(MISS)');
     }
     

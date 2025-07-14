@@ -110,11 +110,11 @@ class SceneManager {
     
     setupLighting() {
         // Ambient light for overall visibility
-        this.ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+        this.ambientLight = new THREE.AmbientLight(0x404040, 1.0);
         this.scene.add(this.ambientLight);
         
         // Main directional light from camera direction
-        this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
         this.directionalLight.position.set(0, 0, 1);
         this.directionalLight.target.position.set(0, 0, 0);
         
@@ -142,7 +142,7 @@ class SceneManager {
         ];
         
         for (let i = 0; i < lightColors.length; i++) {
-            const light = new THREE.PointLight(lightColors[i], 0.3, 80);
+            const light = new THREE.PointLight(lightColors[i], 1.0, 100);
             light.position.set(
                 lightPositions[i].x,
                 lightPositions[i].y,
@@ -804,40 +804,27 @@ class SceneManager {
     
     // Handle tap/click in 3D space
     handleTap(screenX, screenY) {
-        const worldPos = this.screenToWorld(screenX, screenY, -30);
-        
-        // Find closest target to tap position
-        const targets = [...this.balloons, ...this.enemies];
-        let closestTarget = null;
-        let closestDistance = Infinity;
-        const maxTapDistance = 5;
-        
-        targets.forEach(target => {
-            if (!target.isAlive) return;
-            
-            const distance = worldPos.distanceTo(target.position);
-            if (distance < closestDistance && distance <= maxTapDistance) {
-                closestDistance = distance;
-                closestTarget = target;
-            }
-        });
-        
-        if (closestTarget) {
-            // Direct hit
-            if (closestTarget.hit()) {
-                this.removeObject(
-                    closestTarget instanceof Balloon3D ? this.balloons : this.enemies,
-                    closestTarget
-                );
-            }
-            
-            // Add camera shake for impact
-            this.addCameraShake(0.2);
-            
-            return true;
+        // Use raycasting to find the first balloon under the tap/click
+        const mouse = new THREE.Vector2(
+            (screenX / window.innerWidth) * 2 - 1,
+            -(screenY / window.innerHeight) * 2 + 1
+        );
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, this.camera);
+        // Only test balloons for now
+        const balloonMeshes = this.balloons.filter(b => b.isAlive && b.mesh).map(b => b.mesh);
+        const intersects = raycaster.intersectObjects(balloonMeshes, false);
+        let targetPos = null;
+        if (intersects.length > 0) {
+            targetPos = intersects[0].object.position.clone();
+        } else {
+            // If no balloon hit, shoot in the direction of the tap
+            targetPos = this.screenToWorld(screenX, screenY, -50);
         }
-        
-        return false;
+        // Fire a projectile toward the target position
+        this.createPlayerProjectile({ targetPosition: targetPos });
+        // Return true if a balloon was hit
+        return intersects.length > 0;
     }
     
     // Handle window resize
