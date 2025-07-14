@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ceiling Pop 3D - Advanced Edition</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts: Orbitron -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Tone.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+</head>
+<body>
+    <!-- 3D Game Canvas Container -->
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- HUD Overlay -->
+        <div id="hud" class="hud">
+            <div class="hud-left">
+                <div class="hud-item">SCORE: <span id="score">0</span></div>
+                <div class="hud-item">DEPTH BONUS: <span id="depth-bonus">x1.0</span></div>
+            </div>
+            <div class="hud-center">
+                <div class="hud-item">LEVEL: <span id="level">1</span></div>
+                <div class="hud-item">WAVE: <span id="wave">1</span></div>
+            </div>
+            <div class="hud-right">
+                <div class="hud-item">MISSED: <span id="missed">0</span> / 20</div>
+                <div class="hud-item">SHIELDS: <span id="shields">100</span>%</div>
+            </div>
+        </div>
+
+        <!-- Health Bar -->
+        <div id="health-bar-container" class="health-container">
+            <div class="health-label">SHIELDS</div>
+            <div class="health-bar-bg">
+                <div id="health-bar" class="health-bar"></div>
+            </div>
+        </div>
+        
+        <!-- Power-up Timer UI -->
+        <div id="powerup-timer" class="powerup-timer hidden">
+            <span id="powerup-name" class="powerup-name">POWER-UP</span>
+            <div class="powerup-bar-bg">
+                <div id="powerup-bar" class="powerup-bar"></div>
+            </div>
+        </div>
+
+        <!-- 3D Targeting Reticle -->
+        <div id="targeting-reticle" class="targeting-reticle">
+            <div class="reticle-center"></div>
+            <div class="reticle-ring"></div>
+        </div>
+
+        <!-- Game Modals -->
+        <div id="modal" class="modal">
+            <div id="modal-content" class="modal-content">
+                <h1 id="modal-title" class="modal-title">CEILING POP 3D</h1>
+                <p id="modal-text" class="modal-text">Experience the ultimate 3D space defense. Tap/Click to destroy targets coming from deep space!</p>
+                <div class="modal-features">
+                    <div class="feature">✦ Depth-based target prioritization</div>
+                    <div class="feature">✦ 3D particle vortex chain reactions</div>
+                    <div class="feature">✦ Perspective-based power aiming</div>
+                </div>
+                <button id="start-button" class="start-button">START GAME</button>
+            </div>
+        </div>
+
+        <!-- FPS Counter (for development) -->
+        <div id="fps-counter" class="fps-counter">FPS: <span id="fps">60</span></div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading 3D Assets...</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/audio-manager.js"></script>
+    <script src="js/game-state.js"></script>
+    <script src="js/game-objects.js"></script>
+    <script src="js/scene-manager.js"></script>
+    <script src="js/input-handlers.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => console.log('SW registered: ', registration))
+                    .catch(registrationError => console.log('SW registration failed: ', registrationError));
+            });
+        }
+    </script>
+</body>
+</html>
