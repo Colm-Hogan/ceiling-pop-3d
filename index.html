@@ -23,41 +23,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Three.js CDN with fallback -->
-    <script>
-        // Load Three.js with fallback
-        function loadScript(src, callback) {
-            const script = document.createElement('script');
-            script.src = src;
-            script.onload = callback;
-            script.onerror = () => {
-                console.warn('Failed to load from primary CDN, trying fallback...');
-                const fallbackScript = document.createElement('script');
-                fallbackScript.src = src.replace('cdnjs.cloudflare.com', 'unpkg.com');
-                fallbackScript.onload = callback;
-                fallbackScript.onerror = () => {
-                    console.error('Failed to load Three.js from all CDNs');
-                    document.getElementById('loading').innerHTML = '<div class="loading-text">Failed to load 3D library. Please check your internet connection.</div>';
-                };
-                document.head.appendChild(fallbackScript);
-            };
-            document.head.appendChild(script);
-        }
-        
-        // Load Three.js first
-        loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', () => {
-            console.log('Three.js loaded successfully');
-            // Then load Tone.js
-            loadScript('https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js', () => {
-                console.log('Tone.js loaded successfully');
-                // Initialize game after both libraries are loaded
-                if (window.gameController) {
-                    window.gameController.init();
-                }
-            });
-        });
-    </script>
 </head>
 <body>
     <!-- 3D Game Canvas Container -->
@@ -126,14 +91,19 @@
         <div class="loading-text">Loading 3D Assets...</div>
     </div>
 
-    <!-- Scripts -->
-    <script src="js/utils.js"></script>
-    <script src="js/audio-manager.js"></script>
-    <script src="js/game-state.js"></script>
-    <script src="js/game-objects.js"></script>
-    <script src="js/scene-manager.js"></script>
-    <script src="js/input-handler.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Tone.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    
+    <!-- Game Scripts (defer to ensure correct order) -->
+    <script src="js/utils.js" defer></script>
+    <script src="js/audio-manager.js" defer></script>
+    <script src="js/game-state.js" defer></script>
+    <script src="js/game-objects.js" defer></script>
+    <script src="js/scene-manager.js" defer></script>
+    <script src="js/input-handler.js" defer></script>
+    <script src="js/main.js" defer></script>
     
     <!-- Initialize game after all scripts are loaded -->
     <script>
