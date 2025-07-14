@@ -384,9 +384,7 @@ class EnemyDrone3D extends GameObject3D {
         // Add engine glow
         const engineGeometry = geometryCache.getCylinder(0.3, 0.3, 0.5, 8);
         const engineMaterial = new THREE.MeshBasicMaterial({
-            color: 0xff0000,
-            emissive: 0xff0000,
-            emissiveIntensity: 0.5
+            color: 0xff0000
         });
         
         const engine1 = new THREE.Mesh(engineGeometry, engineMaterial);
@@ -448,11 +446,12 @@ class EnemyDrone3D extends GameObject3D {
         // Engine glow animation
         if (this.mesh) {
             const engines = this.mesh.children.filter(child => 
-                child.material && child.material.emissive && 
-                child.material.emissive.getHex() === 0xff0000
+                child.material && child.material.color && 
+                child.material.color.getHex() === 0xff0000
             );
             engines.forEach(engine => {
-                engine.material.emissiveIntensity = 0.3 + Math.sin(this.age * 8) * 0.2;
+                const intensity = 0.3 + Math.sin(this.age * 8) * 0.2;
+                engine.material.color.setRGB(intensity, 0, 0);
             });
         }
         
@@ -505,11 +504,12 @@ class EnemyDrone3D extends GameObject3D {
         // Visual feedback
         if (this.mesh) {
             this.mesh.children.forEach(child => {
-                if (child.material && child.material.emissive) {
-                    child.material.emissive.setHex(0xff0000);
+                if (child.material && child.material.color) {
+                    const originalColor = child.material.color.getHex();
+                    child.material.color.setHex(0xff0000);
                     setTimeout(() => {
                         if (child.material) {
-                            child.material.emissive.setHex(0x000000);
+                            child.material.color.setHex(originalColor);
                         }
                     }, 150);
                 }
@@ -679,9 +679,7 @@ class MiniShip3D extends GameObject3D {
         // Engine glow
         const engineGeometry = geometryCache.getCylinder(0.1, 0.1, 0.3, 6);
         const engineMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ffff,
-            emissive: 0x00ffff,
-            emissiveIntensity: 0.8
+            color: 0x00ffff
         });
         const engine = new THREE.Mesh(engineGeometry, engineMaterial);
         engine.position.z = -this.size * 0.8;
@@ -727,11 +725,12 @@ class MiniShip3D extends GameObject3D {
         // Engine glow animation
         if (this.mesh) {
             const engine = this.mesh.children.find(child => 
-                child.material && child.material.emissive && 
-                child.material.emissive.getHex() === 0x00ffff
+                child.material && child.material.color && 
+                child.material.color.getHex() === 0x00ffff
             );
             if (engine) {
-                engine.material.emissiveIntensity = 0.6 + Math.sin(this.age * 15) * 0.2;
+                const intensity = 0.6 + Math.sin(this.age * 15) * 0.2;
+                engine.material.color.setRGB(0, intensity, intensity);
             }
         }
     }
