@@ -8,7 +8,6 @@ const CACHE_URLS = [
   '/js/game-state.js',
   '/js/game-objects.js',
   '/js/scene-manager.js',
-  '/js/input-handlers.js',
   '/js/audio-manager.js',
   '/js/utils.js',
   '/icons/favicon.ico',
